@@ -248,6 +248,7 @@ class TestProject:
     def test_method_get_status_with_all_params(self, client: Cellect) -> None:
         project = client.api.v1.project.get_status(
             project_id="project_id",
+            include_progress=True,
             response=True,
         )
         assert_matches_type(object, project, path=["response"])
@@ -521,6 +522,7 @@ class TestAsyncProject:
     async def test_method_get_status_with_all_params(self, async_client: AsyncCellect) -> None:
         project = await async_client.api.v1.project.get_status(
             project_id="project_id",
+            include_progress=True,
             response=True,
         )
         assert_matches_type(object, project, path=["response"])
