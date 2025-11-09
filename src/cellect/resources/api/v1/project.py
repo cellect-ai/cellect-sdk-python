@@ -236,6 +236,7 @@ class ProjectResource(SyncAPIResource):
         self,
         project_id: str,
         *,
+        include_progress: bool | Omit = omit,
         response: bool | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -247,7 +248,12 @@ class ProjectResource(SyncAPIResource):
         """
         Get the current agent status for a project.
 
-        Returns the agent's current status and optionally the final response text.
+        Returns the agent's current status and optionally the final response text and
+        progress messages.
+
+        Args: response: If True, include the final response text (default: False)
+        include_progress: If True, include progress messages since last sync (default:
+        False)
 
         Args:
           extra_headers: Send extra headers
@@ -267,7 +273,13 @@ class ProjectResource(SyncAPIResource):
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=maybe_transform({"response": response}, project_get_status_params.ProjectGetStatusParams),
+                query=maybe_transform(
+                    {
+                        "include_progress": include_progress,
+                        "response": response,
+                    },
+                    project_get_status_params.ProjectGetStatusParams,
+                ),
             ),
             cast_to=object,
         )
@@ -485,6 +497,7 @@ class AsyncProjectResource(AsyncAPIResource):
         self,
         project_id: str,
         *,
+        include_progress: bool | Omit = omit,
         response: bool | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -496,7 +509,12 @@ class AsyncProjectResource(AsyncAPIResource):
         """
         Get the current agent status for a project.
 
-        Returns the agent's current status and optionally the final response text.
+        Returns the agent's current status and optionally the final response text and
+        progress messages.
+
+        Args: response: If True, include the final response text (default: False)
+        include_progress: If True, include progress messages since last sync (default:
+        False)
 
         Args:
           extra_headers: Send extra headers
@@ -517,7 +535,11 @@ class AsyncProjectResource(AsyncAPIResource):
                 extra_body=extra_body,
                 timeout=timeout,
                 query=await async_maybe_transform(
-                    {"response": response}, project_get_status_params.ProjectGetStatusParams
+                    {
+                        "include_progress": include_progress,
+                        "response": response,
+                    },
+                    project_get_status_params.ProjectGetStatusParams,
                 ),
             ),
             cast_to=object,
