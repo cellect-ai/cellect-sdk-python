@@ -29,6 +29,15 @@ class TestProject:
 
     @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
+    def test_method_create_with_all_params(self, client: Cellect) -> None:
+        project = client.api.v1.project.create(
+            project_name="project_name",
+            params={"foo": "bar"},
+        )
+        assert_matches_type(ProjectResponse, project, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
     def test_raw_response_create(self, client: Cellect) -> None:
         response = client.api.v1.project.with_raw_response.create(
             project_name="project_name",
@@ -298,6 +307,15 @@ class TestAsyncProject:
     async def test_method_create(self, async_client: AsyncCellect) -> None:
         project = await async_client.api.v1.project.create(
             project_name="project_name",
+        )
+        assert_matches_type(ProjectResponse, project, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_method_create_with_all_params(self, async_client: AsyncCellect) -> None:
+        project = await async_client.api.v1.project.create(
+            project_name="project_name",
+            params={"foo": "bar"},
         )
         assert_matches_type(ProjectResponse, project, path=["response"])
 

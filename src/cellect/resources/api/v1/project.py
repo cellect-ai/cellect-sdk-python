@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Dict
+
 import httpx
 
 from ...._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
@@ -50,6 +52,7 @@ class ProjectResource(SyncAPIResource):
         self,
         *,
         project_name: str,
+        params: Dict[str, object] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -63,6 +66,8 @@ class ProjectResource(SyncAPIResource):
         Args:
           project_name: Project name
 
+          params: Additional parameters defining project behavior
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -73,7 +78,13 @@ class ProjectResource(SyncAPIResource):
         """
         return self._post(
             "/api/v1/project",
-            body=maybe_transform({"project_name": project_name}, project_create_params.ProjectCreateParams),
+            body=maybe_transform(
+                {
+                    "project_name": project_name,
+                    "params": params,
+                },
+                project_create_params.ProjectCreateParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -309,6 +320,7 @@ class AsyncProjectResource(AsyncAPIResource):
         self,
         *,
         project_name: str,
+        params: Dict[str, object] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -322,6 +334,8 @@ class AsyncProjectResource(AsyncAPIResource):
         Args:
           project_name: Project name
 
+          params: Additional parameters defining project behavior
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -332,7 +346,13 @@ class AsyncProjectResource(AsyncAPIResource):
         """
         return await self._post(
             "/api/v1/project",
-            body=await async_maybe_transform({"project_name": project_name}, project_create_params.ProjectCreateParams),
+            body=await async_maybe_transform(
+                {
+                    "project_name": project_name,
+                    "params": params,
+                },
+                project_create_params.ProjectCreateParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
