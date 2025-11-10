@@ -15,3 +15,5 @@ class V1UploadFileParams(TypedDict, total=False):
     project_id: Required[str]
 
     crack: bool
+
+    params: str

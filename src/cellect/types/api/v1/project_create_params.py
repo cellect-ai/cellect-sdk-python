@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from typing import Dict
 from typing_extensions import Required, TypedDict
 
 __all__ = ["ProjectCreateParams"]
@@ -10,3 +11,6 @@ __all__ = ["ProjectCreateParams"]
 class ProjectCreateParams(TypedDict, total=False):
     project_name: Required[str]
     """Project name"""
+
+    params: Dict[str, object]
+    """Additional parameters defining project behavior"""

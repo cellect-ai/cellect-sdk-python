@@ -69,6 +69,7 @@ class TestV1:
             file=b"raw file contents",
             project_id="project_id",
             crack=True,
+            params="params",
         )
         assert_matches_type(object, v1, path=["response"])
 
@@ -158,6 +159,7 @@ class TestAsyncV1:
             file=b"raw file contents",
             project_id="project_id",
             crack=True,
+            params="params",
         )
         assert_matches_type(object, v1, path=["response"])
 
