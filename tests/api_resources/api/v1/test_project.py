@@ -258,6 +258,7 @@ class TestProject:
         project = client.api.v1.project.get_status(
             project_id="project_id",
             include_progress=True,
+            include_usage=True,
             response=True,
         )
         assert_matches_type(object, project, path=["response"])
@@ -541,6 +542,7 @@ class TestAsyncProject:
         project = await async_client.api.v1.project.get_status(
             project_id="project_id",
             include_progress=True,
+            include_usage=True,
             response=True,
         )
         assert_matches_type(object, project, path=["response"])

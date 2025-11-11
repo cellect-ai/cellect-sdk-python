@@ -10,4 +10,6 @@ __all__ = ["ProjectGetStatusParams"]
 class ProjectGetStatusParams(TypedDict, total=False):
     include_progress: bool
 
+    include_usage: bool
+
     response: bool
