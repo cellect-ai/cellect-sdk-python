@@ -248,6 +248,7 @@ class ProjectResource(SyncAPIResource):
         project_id: str,
         *,
         include_progress: bool | Omit = omit,
+        include_usage: bool | Omit = omit,
         response: bool | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -259,11 +260,12 @@ class ProjectResource(SyncAPIResource):
         """
         Get the current agent status for a project.
 
-        Returns the agent's current status and optionally the final response text and
-        progress messages.
+        Returns the agent's current status and optionally the final response text,
+        progress messages, and usage data.
 
         Args: response: If True, include the final response text (default: False)
         include_progress: If True, include progress messages since last sync (default:
+        False) include_usage: If True, include usage metrics for the project (default:
         False)
 
         Args:
@@ -287,6 +289,7 @@ class ProjectResource(SyncAPIResource):
                 query=maybe_transform(
                     {
                         "include_progress": include_progress,
+                        "include_usage": include_usage,
                         "response": response,
                     },
                     project_get_status_params.ProjectGetStatusParams,
@@ -518,6 +521,7 @@ class AsyncProjectResource(AsyncAPIResource):
         project_id: str,
         *,
         include_progress: bool | Omit = omit,
+        include_usage: bool | Omit = omit,
         response: bool | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -529,11 +533,12 @@ class AsyncProjectResource(AsyncAPIResource):
         """
         Get the current agent status for a project.
 
-        Returns the agent's current status and optionally the final response text and
-        progress messages.
+        Returns the agent's current status and optionally the final response text,
+        progress messages, and usage data.
 
         Args: response: If True, include the final response text (default: False)
         include_progress: If True, include progress messages since last sync (default:
+        False) include_usage: If True, include usage metrics for the project (default:
         False)
 
         Args:
@@ -557,6 +562,7 @@ class AsyncProjectResource(AsyncAPIResource):
                 query=await async_maybe_transform(
                     {
                         "include_progress": include_progress,
+                        "include_usage": include_usage,
                         "response": response,
                     },
                     project_get_status_params.ProjectGetStatusParams,
