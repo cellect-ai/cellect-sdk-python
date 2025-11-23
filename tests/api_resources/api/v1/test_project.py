@@ -157,6 +157,16 @@ class TestProject:
 
     @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
+    def test_method_apply_transform_with_all_params(self, client: Cellect) -> None:
+        project = client.api.v1.project.apply_transform(
+            project_id="project_id",
+            prompt="prompt",
+            turn_rephrase_mode="turn_rephrase_mode",
+        )
+        assert_matches_type(object, project, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
     def test_raw_response_apply_transform(self, client: Cellect) -> None:
         response = client.api.v1.project.with_raw_response.apply_transform(
             project_id="project_id",
@@ -436,6 +446,16 @@ class TestAsyncProject:
         project = await async_client.api.v1.project.apply_transform(
             project_id="project_id",
             prompt="prompt",
+        )
+        assert_matches_type(object, project, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_method_apply_transform_with_all_params(self, async_client: AsyncCellect) -> None:
+        project = await async_client.api.v1.project.apply_transform(
+            project_id="project_id",
+            prompt="prompt",
+            turn_rephrase_mode="turn_rephrase_mode",
         )
         assert_matches_type(object, project, path=["response"])
 

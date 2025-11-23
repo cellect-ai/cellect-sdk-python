@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Dict
+from typing import Dict, Optional
 
 import httpx
 
@@ -162,6 +162,7 @@ class ProjectResource(SyncAPIResource):
         project_id: str,
         *,
         prompt: str,
+        turn_rephrase_mode: Optional[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -185,7 +186,13 @@ class ProjectResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `project_id` but received {project_id!r}")
         return self._post(
             f"/api/v1/project/{project_id}/apply",
-            body=maybe_transform({"prompt": prompt}, project_apply_transform_params.ProjectApplyTransformParams),
+            body=maybe_transform(
+                {
+                    "prompt": prompt,
+                    "turn_rephrase_mode": turn_rephrase_mode,
+                },
+                project_apply_transform_params.ProjectApplyTransformParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -433,6 +440,7 @@ class AsyncProjectResource(AsyncAPIResource):
         project_id: str,
         *,
         prompt: str,
+        turn_rephrase_mode: Optional[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -457,7 +465,11 @@ class AsyncProjectResource(AsyncAPIResource):
         return await self._post(
             f"/api/v1/project/{project_id}/apply",
             body=await async_maybe_transform(
-                {"prompt": prompt}, project_apply_transform_params.ProjectApplyTransformParams
+                {
+                    "prompt": prompt,
+                    "turn_rephrase_mode": turn_rephrase_mode,
+                },
+                project_apply_transform_params.ProjectApplyTransformParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout

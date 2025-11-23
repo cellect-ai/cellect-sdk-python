@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from typing import Optional
 from typing_extensions import Required, TypedDict
 
 __all__ = ["ProjectApplyTransformParams"]
@@ -9,3 +10,5 @@ __all__ = ["ProjectApplyTransformParams"]
 
 class ProjectApplyTransformParams(TypedDict, total=False):
     prompt: Required[str]
+
+    turn_rephrase_mode: Optional[str]
