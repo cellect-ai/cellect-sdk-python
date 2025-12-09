@@ -8,6 +8,8 @@ __all__ = ["ProjectResponse"]
 
 
 class ProjectResponse(BaseModel):
+    """Response for project operations."""
+
     id: str
     """Project ID"""
 
