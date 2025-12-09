@@ -8,4 +8,6 @@ __all__ = ["V1ListProjectsResponse"]
 
 
 class V1ListProjectsResponse(BaseModel):
+    """Response for listing projects."""
+
     projects: List[str]
