@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from typing import Any, Mapping
+from typing import TYPE_CHECKING, Any, Mapping
 from typing_extensions import Self, override
 
 import httpx
@@ -23,6 +23,7 @@ from ._types import (
     not_given,
 )
 from ._utils import is_given, get_async_library
+from ._compat import cached_property
 from ._version import __version__
 from ._response import (
     to_raw_response_wrapper,
@@ -38,16 +39,15 @@ from ._base_client import (
     AsyncAPIClient,
     make_request_options,
 )
-from .resources.api import api
+
+if TYPE_CHECKING:
+    from .resources import api
+    from .resources.api.api import APIResource, AsyncAPIResource
 
 __all__ = ["Timeout", "Transport", "ProxiesTypes", "RequestOptions", "Cellect", "AsyncCellect", "Client", "AsyncClient"]
 
 
 class Cellect(SyncAPIClient):
-    api: api.APIResource
-    with_raw_response: CellectWithRawResponse
-    with_streaming_response: CellectWithStreamedResponse
-
     # client options
     api_key: str
 
@@ -102,9 +102,19 @@ class Cellect(SyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.api = api.APIResource(self)
-        self.with_raw_response = CellectWithRawResponse(self)
-        self.with_streaming_response = CellectWithStreamedResponse(self)
+    @cached_property
+    def api(self) -> APIResource:
+        from .resources.api import APIResource
+
+        return APIResource(self)
+
+    @cached_property
+    def with_raw_response(self) -> CellectWithRawResponse:
+        return CellectWithRawResponse(self)
+
+    @cached_property
+    def with_streaming_response(self) -> CellectWithStreamedResponse:
+        return CellectWithStreamedResponse(self)
 
     @property
     @override
@@ -231,10 +241,6 @@ class Cellect(SyncAPIClient):
 
 
 class AsyncCellect(AsyncAPIClient):
-    api: api.AsyncAPIResource
-    with_raw_response: AsyncCellectWithRawResponse
-    with_streaming_response: AsyncCellectWithStreamedResponse
-
     # client options
     api_key: str
 
@@ -289,9 +295,19 @@ class AsyncCellect(AsyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.api = api.AsyncAPIResource(self)
-        self.with_raw_response = AsyncCellectWithRawResponse(self)
-        self.with_streaming_response = AsyncCellectWithStreamedResponse(self)
+    @cached_property
+    def api(self) -> AsyncAPIResource:
+        from .resources.api import AsyncAPIResource
+
+        return AsyncAPIResource(self)
+
+    @cached_property
+    def with_raw_response(self) -> AsyncCellectWithRawResponse:
+        return AsyncCellectWithRawResponse(self)
+
+    @cached_property
+    def with_streaming_response(self) -> AsyncCellectWithStreamedResponse:
+        return AsyncCellectWithStreamedResponse(self)
 
     @property
     @override
@@ -418,39 +434,71 @@ class AsyncCellect(AsyncAPIClient):
 
 
 class CellectWithRawResponse:
+    _client: Cellect
+
     def __init__(self, client: Cellect) -> None:
-        self.api = api.APIResourceWithRawResponse(client.api)
+        self._client = client
 
         self.health_check = to_raw_response_wrapper(
             client.health_check,
         )
 
+    @cached_property
+    def api(self) -> api.APIResourceWithRawResponse:
+        from .resources.api import APIResourceWithRawResponse
+
+        return APIResourceWithRawResponse(self._client.api)
+
 
 class AsyncCellectWithRawResponse:
+    _client: AsyncCellect
+
     def __init__(self, client: AsyncCellect) -> None:
-        self.api = api.AsyncAPIResourceWithRawResponse(client.api)
+        self._client = client
 
         self.health_check = async_to_raw_response_wrapper(
             client.health_check,
         )
 
+    @cached_property
+    def api(self) -> api.AsyncAPIResourceWithRawResponse:
+        from .resources.api import AsyncAPIResourceWithRawResponse
+
+        return AsyncAPIResourceWithRawResponse(self._client.api)
+
 
 class CellectWithStreamedResponse:
+    _client: Cellect
+
     def __init__(self, client: Cellect) -> None:
-        self.api = api.APIResourceWithStreamingResponse(client.api)
+        self._client = client
 
         self.health_check = to_streamed_response_wrapper(
             client.health_check,
         )
 
+    @cached_property
+    def api(self) -> api.APIResourceWithStreamingResponse:
+        from .resources.api import APIResourceWithStreamingResponse
+
+        return APIResourceWithStreamingResponse(self._client.api)
+
 
 class AsyncCellectWithStreamedResponse:
+    _client: AsyncCellect
+
     def __init__(self, client: AsyncCellect) -> None:
-        self.api = api.AsyncAPIResourceWithStreamingResponse(client.api)
+        self._client = client
 
         self.health_check = async_to_streamed_response_wrapper(
             client.health_check,
         )
+
+    @cached_property
+    def api(self) -> api.AsyncAPIResourceWithStreamingResponse:
+        from .resources.api import AsyncAPIResourceWithStreamingResponse
+
+        return AsyncAPIResourceWithStreamingResponse(self._client.api)
 
 
 Client = Cellect
