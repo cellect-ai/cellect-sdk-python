@@ -25,32 +25,25 @@ pip install cellect
 The full API of this library can be found in [api.md](api.md).
 
 ```python
-import os
 from cellect import Cellect
 
 client = Cellect(
-    api_key=os.environ.get("CELLECT_API_KEY"),  # This is the default and can be omitted
+    api_key="My API Key",
 )
 
 response = client.health_check()
 ```
-
-While you can provide an `api_key` keyword argument,
-we recommend using [python-dotenv](https://pypi.org/project/python-dotenv/)
-to add `CELLECT_API_KEY="My API Key"` to your `.env` file
-so that your API Key is not stored in source control.
 
 ## Async usage
 
 Simply import `AsyncCellect` instead of `Cellect` and use `await` with each API call:
 
 ```python
-import os
 import asyncio
 from cellect import AsyncCellect
 
 client = AsyncCellect(
-    api_key=os.environ.get("CELLECT_API_KEY"),  # This is the default and can be omitted
+    api_key="My API Key",
 )
 
 
@@ -77,7 +70,6 @@ pip install cellect[aiohttp]
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
 
 ```python
-import os
 import asyncio
 from cellect import DefaultAioHttpClient
 from cellect import AsyncCellect
@@ -85,7 +77,7 @@ from cellect import AsyncCellect
 
 async def main() -> None:
     async with AsyncCellect(
-        api_key=os.environ.get("CELLECT_API_KEY"),  # This is the default and can be omitted
+        api_key="My API Key",
         http_client=DefaultAioHttpClient(),
     ) as client:
         response = await client.health_check()
@@ -103,24 +95,6 @@ Nested request parameters are [TypedDicts](https://docs.python.org/3/library/typ
 
 Typed requests and responses provide autocomplete and documentation within your editor. If you would like to see type errors in VS Code to help catch bugs earlier, set `python.analysis.typeCheckingMode` to `basic`.
 
-## File uploads
-
-Request parameters that correspond to file uploads can be passed as `bytes`, or a [`PathLike`](https://docs.python.org/3/library/os.html#os.PathLike) instance or a tuple of `(filename, contents, media type)`.
-
-```python
-from pathlib import Path
-from cellect import Cellect
-
-client = Cellect()
-
-client.api.v1.upload_file(
-    file=Path("/path/to/file"),
-    project_id="project_id",
-)
-```
-
-The async client uses the exact same interface. If you pass a [`PathLike`](https://docs.python.org/3/library/os.html#os.PathLike) instance, the file contents will be read asynchronously automatically.
-
 ## Handling errors
 
 When the library is unable to connect to the API (for example, due to network connection problems or a timeout), a subclass of `cellect.APIConnectionError` is raised.
@@ -134,7 +108,9 @@ All errors inherit from `cellect.APIError`.
 import cellect
 from cellect import Cellect
 
-client = Cellect()
+client = Cellect(
+    api_key="My API Key",
+)
 
 try:
     client.health_check()
@@ -175,6 +151,7 @@ from cellect import Cellect
 
 # Configure the default for all requests:
 client = Cellect(
+    api_key="My API Key",
     # default is 2
     max_retries=0,
 )
@@ -193,12 +170,14 @@ from cellect import Cellect
 
 # Configure the default for all requests:
 client = Cellect(
+    api_key="My API Key",
     # 20 seconds (default is 1 minute)
     timeout=20.0,
 )
 
 # More granular control:
 client = Cellect(
+    api_key="My API Key",
     timeout=httpx.Timeout(60.0, read=5.0, write=10.0, connect=2.0),
 )
 
@@ -243,7 +222,9 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 ```py
 from cellect import Cellect
 
-client = Cellect()
+client = Cellect(
+    api_key="My API Key",
+)
 response = client.with_raw_response.health_check()
 print(response.headers.get('X-My-Header'))
 
@@ -318,6 +299,7 @@ import httpx
 from cellect import Cellect, DefaultHttpxClient
 
 client = Cellect(
+    api_key="My API Key",
     # Or use the `CELLECT_BASE_URL` env var
     base_url="http://my.test.server.example.com:8083",
     http_client=DefaultHttpxClient(
@@ -340,7 +322,9 @@ By default the library closes underlying HTTP connections whenever the client is
 ```py
 from cellect import Cellect
 
-with Cellect() as client:
+with Cellect(
+    api_key="My API Key",
+) as client:
   # make requests here
   ...
 

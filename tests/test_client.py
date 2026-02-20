@@ -23,7 +23,7 @@ from cellect import Cellect, AsyncCellect, APIResponseValidationError
 from cellect._types import Omit
 from cellect._utils import asyncify
 from cellect._models import BaseModel, FinalRequestOptions
-from cellect._exceptions import CellectError, APIStatusError, APITimeoutError, APIResponseValidationError
+from cellect._exceptions import APIStatusError, APITimeoutError, APIResponseValidationError
 from cellect._base_client import (
     DEFAULT_TIMEOUT,
     HTTPX_DEFAULT_TIMEOUT,
@@ -396,16 +396,6 @@ class TestCellect:
 
         test_client.close()
         test_client2.close()
-
-    def test_validate_headers(self) -> None:
-        client = Cellect(base_url=base_url, api_key=api_key, _strict_response_validation=True)
-        request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-        assert request.headers.get("X-API-Key") == api_key
-
-        with pytest.raises(CellectError):
-            with update_env(**{"CELLECT_API_KEY": Omit()}):
-                client2 = Cellect(base_url=base_url, api_key=None, _strict_response_validation=True)
-            _ = client2
 
     def test_default_query_option(self) -> None:
         client = Cellect(
@@ -1279,16 +1269,6 @@ class TestAsyncCellect:
 
         await test_client.close()
         await test_client2.close()
-
-    def test_validate_headers(self) -> None:
-        client = AsyncCellect(base_url=base_url, api_key=api_key, _strict_response_validation=True)
-        request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-        assert request.headers.get("X-API-Key") == api_key
-
-        with pytest.raises(CellectError):
-            with update_env(**{"CELLECT_API_KEY": Omit()}):
-                client2 = AsyncCellect(base_url=base_url, api_key=None, _strict_response_validation=True)
-            _ = client2
 
     async def test_default_query_option(self) -> None:
         client = AsyncCellect(
