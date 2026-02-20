@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from typing import TYPE_CHECKING, Any, Mapping
+from typing import Any, Mapping
 from typing_extensions import Self, override
 
 import httpx
@@ -39,10 +39,6 @@ from ._base_client import (
     AsyncAPIClient,
     make_request_options,
 )
-
-if TYPE_CHECKING:
-    from .resources import api
-    from .resources.api.api import APIResource, AsyncAPIResource
 
 __all__ = ["Timeout", "Transport", "ProxiesTypes", "RequestOptions", "Cellect", "AsyncCellect", "Client", "AsyncClient"]
 
@@ -103,12 +99,6 @@ class Cellect(SyncAPIClient):
         )
 
     @cached_property
-    def api(self) -> APIResource:
-        from .resources.api import APIResource
-
-        return APIResource(self)
-
-    @cached_property
     def with_raw_response(self) -> CellectWithRawResponse:
         return CellectWithRawResponse(self)
 
@@ -120,12 +110,6 @@ class Cellect(SyncAPIClient):
     @override
     def qs(self) -> Querystring:
         return Querystring(array_format="comma")
-
-    @property
-    @override
-    def auth_headers(self) -> dict[str, str]:
-        api_key = self.api_key
-        return {"X-API-Key": api_key}
 
     @property
     @override
@@ -196,14 +180,15 @@ class Cellect(SyncAPIClient):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> object:
-        """Health check endpoint."""
+    ) -> str:
+        """Server info page."""
+        extra_headers = {"Accept": "text/html", **(extra_headers or {})}
         return self.get(
             "/",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=object,
+            cast_to=str,
         )
 
     @override
@@ -296,12 +281,6 @@ class AsyncCellect(AsyncAPIClient):
         )
 
     @cached_property
-    def api(self) -> AsyncAPIResource:
-        from .resources.api import AsyncAPIResource
-
-        return AsyncAPIResource(self)
-
-    @cached_property
     def with_raw_response(self) -> AsyncCellectWithRawResponse:
         return AsyncCellectWithRawResponse(self)
 
@@ -313,12 +292,6 @@ class AsyncCellect(AsyncAPIClient):
     @override
     def qs(self) -> Querystring:
         return Querystring(array_format="comma")
-
-    @property
-    @override
-    def auth_headers(self) -> dict[str, str]:
-        api_key = self.api_key
-        return {"X-API-Key": api_key}
 
     @property
     @override
@@ -389,14 +362,15 @@ class AsyncCellect(AsyncAPIClient):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> object:
-        """Health check endpoint."""
+    ) -> str:
+        """Server info page."""
+        extra_headers = {"Accept": "text/html", **(extra_headers or {})}
         return await self.get(
             "/",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=object,
+            cast_to=str,
         )
 
     @override
@@ -443,12 +417,6 @@ class CellectWithRawResponse:
             client.health_check,
         )
 
-    @cached_property
-    def api(self) -> api.APIResourceWithRawResponse:
-        from .resources.api import APIResourceWithRawResponse
-
-        return APIResourceWithRawResponse(self._client.api)
-
 
 class AsyncCellectWithRawResponse:
     _client: AsyncCellect
@@ -459,12 +427,6 @@ class AsyncCellectWithRawResponse:
         self.health_check = async_to_raw_response_wrapper(
             client.health_check,
         )
-
-    @cached_property
-    def api(self) -> api.AsyncAPIResourceWithRawResponse:
-        from .resources.api import AsyncAPIResourceWithRawResponse
-
-        return AsyncAPIResourceWithRawResponse(self._client.api)
 
 
 class CellectWithStreamedResponse:
@@ -477,12 +439,6 @@ class CellectWithStreamedResponse:
             client.health_check,
         )
 
-    @cached_property
-    def api(self) -> api.APIResourceWithStreamingResponse:
-        from .resources.api import APIResourceWithStreamingResponse
-
-        return APIResourceWithStreamingResponse(self._client.api)
-
 
 class AsyncCellectWithStreamedResponse:
     _client: AsyncCellect
@@ -493,12 +449,6 @@ class AsyncCellectWithStreamedResponse:
         self.health_check = async_to_streamed_response_wrapper(
             client.health_check,
         )
-
-    @cached_property
-    def api(self) -> api.AsyncAPIResourceWithStreamingResponse:
-        from .resources.api import AsyncAPIResourceWithStreamingResponse
-
-        return AsyncAPIResourceWithStreamingResponse(self._client.api)
 
 
 Client = Cellect
